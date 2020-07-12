@@ -18,6 +18,13 @@ import sr_controller  # noqa:E402 # isort:skip
 GAME_DURATION_SECONDS = 150
 
 
+def log_filename() -> str:
+    # TODO: maybe merge with `recording_path`?
+    return 'supervisor-log-{}.txt'.format(
+        sr_controller.get_filename_safe_identifier(),
+    )
+
+
 def recording_path() -> Path:
     now = datetime.datetime.now()
 
@@ -119,6 +126,8 @@ def run_match(supervisor: Supervisor) -> None:
 
 def main() -> None:
     quit_if_development_mode()
+
+    sr_controller.tee_streams(REPO_ROOT / 'recordings' / log_filename())
 
     supervisor = Supervisor()
 
